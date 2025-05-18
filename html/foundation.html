@@ -9,8 +9,26 @@
   <script src="../js/foundation.js" defer></script>
 </head>
 <body>
-  <div id="app">
-    <!-- SPA içerikleri buraya yüklenecek -->
-  </div>
+  <header class="app-header">
+    <img src="../img/logo.png" alt="Logo" class="logo-small" />
+    <h1>Yönetici Paneli</h1>
+    <div class="user-info">
+      <span id="user-role"></span> - <span id="user-name"></span>
+      <button id="logout-btn">Çıkış</button>
+    </div>
+  </header>
+
+  <nav class="app-menu">
+    <ul>
+      <li><a href="#">Rezervasyonlar</a></li>
+      <li><a href="#">Araçlar</a></li>
+      <li><a href="password.html">Şifre Değiştir</a></li>
+    </ul>
+  </nav>
+
+  <main class="app-content">
+    <h2>Hoş geldiniz!</h2>
+    <p>Yönetim işlemlerinizi buradan yapabilirsiniz.</p>
+  </main>
 </body>
 </html>

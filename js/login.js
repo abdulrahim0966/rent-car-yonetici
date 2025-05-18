@@ -1,36 +1,35 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const loginBtn = document.getElementById('login-btn');
-  const infoText = document.getElementById('info-text');
-  const forgotLink = document.getElementById('forgot-password');
+document.addEventListener("DOMContentLoaded", () => {
+  const loginBtn = document.getElementById("login-btn");
+  const infoText = document.getElementById("info-text");
 
-  loginBtn.addEventListener('click', async () => {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+  loginBtn.addEventListener("click", async () => {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
 
     if (!username || !password) {
-      infoText.textContent = 'Kullanıcı adı ve şifre gerekli.';
+      infoText.textContent = "Lütfen tüm alanları doldurun.";
       return;
     }
 
     try {
-      const response = await fetch(`${CONFIG.API_URL}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`);
+      const response = await fetch(`${GOOGLE_SCRIPT_URL}?username=${username}&password=${password}`);
       const result = await response.json();
 
-      if (result.success) {
-        localStorage.setItem('session', 'yes');
-        localStorage.setItem('userType', result.userType); // admin türü
-        window.location.href = '../html/foundation.html';
+      if (result.success === "yes") {
+        localStorage.setItem("login", "yes");
+        localStorage.setItem("currentUser", username);
+        window.location.href = "../html/foundation.html";
       } else {
-        infoText.textContent = 'Kullanıcı adı veya şifre hatalı.';
+        infoText.textContent = "Kullanıcı adı veya şifre hatalı.";
       }
-    } catch (error) {
-      infoText.textContent = 'Sunucuya bağlanılamadı.';
-      console.error('Login error:', error);
+    } catch (err) {
+      console.error("Login error:", err);
+      infoText.textContent = "Sunucuya bağlanılamadı.";
     }
   });
 
-  forgotLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('info-text').textContent = 'Lütfen 05316150319 numarası ile iletişime geçin.';
+  document.getElementById("forgot-password").addEventListener("click", () => {
+    infoText.textContent = "Şifrenizi unuttuysanız 05316150319 numarasıyla iletişime geçin.";
   });
 });
+

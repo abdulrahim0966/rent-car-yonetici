@@ -1,52 +1,42 @@
-import { API_URL } from './config.js';
+document.addEventListener("DOMContentLoaded", () => {
+  const changePasswordBtn = document.getElementById("change-password-btn");
+  const statusText = document.getElementById("password-status");
 
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('password-form');
-  const messageEl = document.getElementById('message');
-  const backBtn = document.getElementById('back-button');
+  changePasswordBtn.addEventListener("click", async () => {
+    const username = document.getElementById("username").value.trim();
+    const newPassword = document.getElementById("new-password").value.trim();
 
-  backBtn.addEventListener('click', () => {
-    // E2 ana karkas sayfaya geri dön
-    window.location.href = '/html/foundation.html';
-  });
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const username = form['username'].value.trim();
-    const oldPassword = form['old-password'].value.trim();
-    const newPassword = form['new-password'].value.trim();
-
-    if (!username || !oldPassword || !newPassword) {
-      messageEl.textContent = 'Lütfen tüm alanları doldurun.';
+    if (!username || !newPassword) {
+      statusText.textContent = "Lütfen tüm alanları doldurun.";
       return;
     }
 
-    messageEl.textContent = 'Şifre güncelleniyor...';
-
     try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch(CONFIG.scriptURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          action: 'updatePassword',
+          action: "changePassword",
           username,
-          oldPassword,
-          newPassword
-        })
+          newPassword,
+        }),
       });
 
-      const data = await response.json();
+      const result = await response.json();
 
-      if (data.success) {
-        messageEl.textContent = 'Şifre başarıyla güncellendi.';
-        form.reset();
+      if (result.success) {
+        statusText.textContent = "Şifre başarıyla güncellendi.";
+        statusText.style.color = "limegreen";
       } else {
-        messageEl.textContent = data.message || 'Şifre güncellenirken hata oluştu.';
+        statusText.textContent = result.message || "Bir hata oluştu.";
+        statusText.style.color = "crimson";
       }
     } catch (error) {
-      console.error(error);
-      messageEl.textContent = 'Sunucuya bağlanırken hata oluştu.';
+      console.error("Password change error:", error);
+      statusText.textContent = "Sunucu hatası: Şifre değiştirilemedi.";
+      statusText.style.color = "crimson";
     }
   });
 });

@@ -1,35 +1,37 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const loginBtn = document.getElementById("login-btn");
-  const infoText = document.getElementById("info-text");
+// /js/login.js
+document.addEventListener('DOMContentLoaded', () => {
+  const iframe = document.getElementById('gas-frame');
+  iframe.src = GAS_IFRAME_URL;
 
-  loginBtn.addEventListener("click", async () => {
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+  document.getElementById('login-btn').addEventListener('click', () => {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
 
     if (!username || !password) {
-      infoText.textContent = "Lütfen tüm alanları doldurun.";
+      document.getElementById('info-text').textContent = 'Kullanıcı adı ve şifre zorunludur.';
       return;
     }
 
-    try {
-      const response = await fetch(`${GOOGLE_SCRIPT_URL}?username=${username}&password=${password}`);
-      const result = await response.json();
+    const payload = {
+      action: 'login',
+      username,
+      password
+    };
 
-      if (result.success === "yes") {
-        localStorage.setItem("login", "yes");
-        localStorage.setItem("currentUser", username);
-        window.location.href = "../html/foundation.html";
-      } else {
-        infoText.textContent = "Kullanıcı adı veya şifre hatalı.";
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      infoText.textContent = "Sunucuya bağlanılamadı.";
+    // iframe'e veri gönderiyoruz
+    iframe.contentWindow.postMessage(payload, '*');
+  });
+
+  // iframe'den cevap geldiğinde
+  window.addEventListener('message', (event) => {
+    if (!event.origin.includes('script.google.com')) return;
+
+    const response = event.data;
+    if (response.status === 'success') {
+      // Başarılı giriş
+      window.location.href = './foundation.html';
+    } else {
+      document.getElementById('info-text').textContent = 'Giriş başarısız!';
     }
   });
-
-  document.getElementById("forgot-password").addEventListener("click", () => {
-    infoText.textContent = "Şifrenizi unuttuysanız 05316150319 numarasıyla iletişime geçin.";
-  });
 });
-

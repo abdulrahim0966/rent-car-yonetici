@@ -1,9 +1,10 @@
+<!-- html/login.html -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <title>Rent Yönetici Giriş</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rent Yönetici Giriş</title>
   <link rel="stylesheet" href="../css/style.css" />
   <script src="../js/config.js" defer></script>
   <script src="../js/login.js" defer></script>
@@ -16,14 +17,14 @@
     </header>
 
     <section class="login-form">
-      <input type="text" id="username" placeholder="Kullanıcı Adı" />
-      <input type="password" id="password" placeholder="Şifre" />
+      <input type="text" id="username" placeholder="Kullanıcı Adı" required />
+      <input type="password" id="password" placeholder="Şifre" required />
       <button id="login-btn">Giriş Yap</button>
+      <a href="#" id="forgot-password">Şifremi Unuttum</a>
       <p class="info-message" id="info-text"></p>
     </section>
 
-    <!-- CORS-Free iframe -->
-    <iframe id="gas-frame" src="" style="display:none;"></iframe>
+    <iframe id="auth-iframe" src="" style="display:none;"></iframe>
   </main>
 </body>
 </html>

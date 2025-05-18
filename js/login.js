@@ -1,37 +1,41 @@
-// /js/login.js
-document.addEventListener('DOMContentLoaded', () => {
-  const iframe = document.getElementById('gas-frame');
-  iframe.src = GAS_IFRAME_URL;
+document.addEventListener("DOMContentLoaded", () => {
+  const iframe = document.getElementById("gas-frame");
+  iframe.src = CONFIG.IFRAME_URL;
 
-  document.getElementById('login-btn').addEventListener('click', () => {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+  const loginBtn = document.getElementById("login-btn");
+
+  loginBtn.addEventListener("click", () => {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
 
     if (!username || !password) {
-      document.getElementById('info-text').textContent = 'Kullanıcı adı ve şifre zorunludur.';
+      showMessage("Lütfen tüm alanları doldurun.");
       return;
     }
 
     const payload = {
-      action: 'login',
+      action: "login",
       username,
-      password
+      password,
     };
 
-    // iframe'e veri gönderiyoruz
-    iframe.contentWindow.postMessage(payload, '*');
+    iframe.contentWindow.postMessage(payload, CONFIG.IFRAME_URL);
   });
 
-  // iframe'den cevap geldiğinde
-  window.addEventListener('message', (event) => {
-    if (!event.origin.includes('script.google.com')) return;
+  window.addEventListener("message", (event) => {
+    if (!event.origin.includes("googleusercontent.com")) return;
 
-    const response = event.data;
-    if (response.status === 'success') {
-      // Başarılı giriş
-      window.location.href = './foundation.html';
+    const { status, message, userType } = event.data;
+
+    if (status === "success") {
+      localStorage.setItem("userType", userType);
+      window.location.href = "foundation.html";
     } else {
-      document.getElementById('info-text').textContent = 'Giriş başarısız!';
+      showMessage(message || "Giriş başarısız.");
     }
   });
+
+  function showMessage(msg) {
+    document.getElementById("info-text").textContent = msg;
+  }
 });
